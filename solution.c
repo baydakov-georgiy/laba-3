@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define ROOT_DIR "./labyrinth"
+#define ROOT_DIR "./test"
 #define MAX_PATH_LENGTH 256
 #define MAX_FILENAME_LENGTH 64
 #define MAX_LINE_LENGTH 256
@@ -115,14 +115,16 @@ bool solve_labyrinth(FileList *list, char *filename) {
     while(fgets(line, MAX_LINE_LENGTH, fp) != NULL) {
         if (strstarts(line, KEY_STR)) {
             //printf("%s\n", file_item->path);
-            snprintf(result_chain, MAX_CHAIN_LENGTH, "%s%s\n", result_chain, file_item->path);
+            strcat(result_chain, file_item->path);
+            strcat(result_chain, "\n");
             return true;
         } else if (strstarts(line, INCLUDE_STR)) {
             char new_filename[MAX_FILENAME_LENGTH];
             sscanf(line, "@include %s", new_filename);
             if (solve_labyrinth(list, new_filename)) {
                 //printf("%s\n", file_item->path);
-                snprintf(result_chain, MAX_CHAIN_LENGTH, "%s%s\n", result_chain, file_item->path);
+                strcat(result_chain, file_item->path);
+                strcat(result_chain, "\n");
                 return true;
             }
         }
@@ -137,7 +139,8 @@ int main() {
     //print_file_list(list);
     solve_labyrinth(list, "file.txt");
     FILE *fp = fopen("result.txt", "w");
-    fputs(result_chain, fp);
+    fprintf(fp, "%s", result_chain);
+    printf("SOLVE:\n%s", result_chain);
     fclose(fp);
     return 0;
 }
