@@ -97,10 +97,12 @@ void make_file_list(char *dir_path, FileList *list) {
 }
 
 void print_file_list(FileList *list) {
+    FILE *fp = fopen("result.txt", "w");
     for (int i = 0; i < list->len; i++) {
         FileType* current_file = list->data[i];
-        printf("%s: %s\n", current_file->filename, current_file->path);
+        fprintf(fp, "%s: %s\n", current_file->filename, current_file->path);
     }
+    fclose(fp);
 }
 
 bool strstarts(char *source, char *starts) {
@@ -136,10 +138,9 @@ int main() {
     FileList *list = create_file_list();
     make_file_list(ROOT_DIR, list);
     print_file_list(list);
-    printf("SOLVE:\n");
-    solve_labyrinth(list, "file.txt");
-    FILE *fp = fopen("result.txt", "r");
-    fputs(result_chain, fp);
-    fclose(fp);
+    //solve_labyrinth(list, "file.txt");
+    //FILE *fp = fopen("result.txt", "w");
+    //fputs(result_chain, fp);
+    //fclose(fp);
     return 0;
 }
