@@ -26,7 +26,6 @@ char *get_next_path(char *source_dir, char *next) {
     snprintf(next_path, MAX_PATH_LENGTH, "%s/%s", source_dir, next);
     return next_path;
 }
-
 struct {
     char *filename;
     char *path;
@@ -104,25 +103,21 @@ bool strstarts(char *source, char *starts) {
     return strncmp(source, starts, strlen(starts)) == 0;
 }
 
-char result_chain[MAX_CHAIN_LENGTH];
-bool solve_labyrinth(FileList *list, char *filename) {
+bool solve_labyrinth(FileList *list, char *filename, FILE *result_file) {
     FileType *file_item = find_file_in_list(list, filename);
+    if (!file_item) return false;
     FILE *fp = fopen(file_item->path, "r");
     if (!fp) print_error("File is not opened");
-    char *line = (char *) malloc(MAX_LINE_LENGTH);
+    char line[MAX_LINE_LENGTH] = {'\0'};
     while(fgets(line, MAX_LINE_LENGTH, fp) != NULL) {
         if (strstarts(line, KEY_STR)) {
-            //printf("%s\n", file_item->path);
-            strcat(result_chain, file_item->path);
-            strcat(result_chain, "\n");
+            fprintf(result_file, "%s\n", file_item->path);
             return true;
         } else if (strstarts(line, INCLUDE_STR)) {
             char new_filename[MAX_FILENAME_LENGTH];
             sscanf(line, "@include %s", new_filename);
-            if (solve_labyrinth(list, new_filename)) {
-                //printf("%s\n", file_item->path);
-                strcat(result_chain, file_item->path);
-                strcat(result_chain, "\n");
+            if (solve_labyrinth(list, new_filename, result_file)) {
+                fprintf(result_file, "%s\n", file_item->path);
                 return true;
             }
         }
@@ -134,11 +129,9 @@ bool solve_labyrinth(FileList *list, char *filename) {
 int main() {
     FileList *list = create_file_list();
     make_file_list(ROOT_DIR, list);
-    //print_file_list(list);
-    solve_labyrinth(list, "file.txt");
-    FILE *fp = fopen("/home/box/result.txt", "w");
+    FILE *fp = fopen("./result.txt", "w");
     if (!fp) print_error("File `result.txt` is not opened");
-    fputs(result_chain, fp);
+    solve_labyrinth(list, "file.txt", fp);
     fclose(fp);
     return 0;
 }
