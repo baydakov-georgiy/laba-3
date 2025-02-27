@@ -136,7 +136,7 @@ int main() {
     make_file_list(ROOT_DIR, list);
     //print_file_list(list);
     solve_labyrinth(list, "file.txt");
-    FILE *fp = fopen("result.txt", "w");
+    FILE *fp = fopen("/home/box/result.txt", "w");
     if (!fp) print_error("File `result.txt` is not opened");
     fputs(result_chain, fp);
     fclose(fp);
