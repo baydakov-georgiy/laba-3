@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define ROOT_DIR "./test"
+#define ROOT_DIR "./labyrinth"
 #define MAX_PATH_LENGTH 256
 #define MAX_FILENAME_LENGTH 64
 #define MAX_LINE_LENGTH 256
@@ -140,7 +140,7 @@ int main() {
     solve_labyrinth(list, "file.txt");
     FILE *fp = fopen("result.txt", "w");
     fprintf(fp, "%s", result_chain);
-    printf("SOLVE:\n%s", result_chain);
+    //printf("SOLVE:\n%s", result_chain);
     fclose(fp);
     return 0;
 }
