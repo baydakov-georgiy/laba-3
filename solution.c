@@ -86,11 +86,8 @@ void make_file_list(char *dir_path, FileList *list) {
         } else if (entry->d_type == DT_REG) {
             char *file_path = get_next_path(dir_path, entry->d_name);
             //printf("%s: %s\n", entry->d_name, file_path);
-            FileType *file_item = find_file_in_list(list, entry->d_name);
-            if (file_item == NULL) {
-                FileType *new_file_item = create_file(entry->d_name, file_path);
-                add_to_file_list(list, new_file_item);
-            }
+            FileType *new_file_item = create_file(entry->d_name, file_path);
+            add_to_file_list(list, new_file_item);
         }
     }
     closedir(dir);
@@ -136,11 +133,15 @@ bool solve_labyrinth(FileList *list, char *filename) {
 
 int main() {
     FileList *list = create_file_list();
-    make_file_list(ROOT_DIR, list);
-    print_file_list(list);
+    //make_file_list(ROOT_DIR, list);
+    //print_file_list(list);
     //solve_labyrinth(list, "file.txt");
     //FILE *fp = fopen("result.txt", "w");
     //fputs(result_chain, fp);
-    //fclose(fp);
+    FILE *fp = fopen("result.txt", "w");
+    DIR *dir = opendir(ROOT_DIR);
+    if (!dir) print_error("Dir is not opened");
+    fputs("ANASKFJASF", fp);
+    fclose(fp);
     return 0;
 }
